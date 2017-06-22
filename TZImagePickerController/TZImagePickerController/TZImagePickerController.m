@@ -463,8 +463,8 @@
     [super pushViewController:viewController animated:animated];
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+-(BOOL)shouldAutorotate {
+    return NO;
 }
 
 - (void)dealloc {

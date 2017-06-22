@@ -13,6 +13,9 @@
 #import "TZPhotoPreviewCell.h"
 #import "TZImageManager.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface TZGifPhotoPreviewController () {
     UIView *_toolBar;
     UIButton *_doneButton;
@@ -131,5 +134,7 @@
         imagePickerVc.didFinishPickingGifImageHandle(animatedImage,_model.asset);
     }
 }
+
+#pragma clang diagnostic pop
 
 @end

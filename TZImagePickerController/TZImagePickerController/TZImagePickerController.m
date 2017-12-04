@@ -568,13 +568,17 @@
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
         [[TZImageManager manager] getAllAlbums:imagePickerVc.allowPickingVideo allowPickingImage:imagePickerVc.allowPickingImage completion:^(NSArray<TZAlbumModel *> *models) {
-            _albumArr = [NSMutableArray arrayWithArray:models];
-            for (TZAlbumModel *albumModel in _albumArr) {
+            NSMutableArray* muteAlbumArr = [NSMutableArray arrayWithArray:models];
+
+            for (TZAlbumModel *albumModel in muteAlbumArr) {
                 albumModel.selectedModels = imagePickerVc.selectedModels;
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!_tableView) {
+                    @synchronized(self) {
+                        _albumArr = muteAlbumArr;
+                    }
                     CGFloat top = 0;
                     CGFloat tableViewHeight = 0;
                     if (self.navigationController.navigationBar.isTranslucent) {
@@ -595,7 +599,10 @@
                     [_tableView registerClass:[TZAlbumCell class] forCellReuseIdentifier:@"TZAlbumCell"];
                     [self.view addSubview:_tableView];
                 } else {
-                    [_tableView reloadData];
+                    @synchronized(self) {
+                        _albumArr = muteAlbumArr;
+                        [_tableView reloadData];
+                    }
                 }
             });
         }];

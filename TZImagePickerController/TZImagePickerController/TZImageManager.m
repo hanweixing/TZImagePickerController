@@ -132,6 +132,20 @@ static dispatch_once_t onceToken;
                 break;
             }
         }
+        
+        //Due to this author's stupid hard-code logic, we need to find photo in another fail-over way
+        if (!model){
+            PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumRecentlyAdded options:nil];
+            for (PHAssetCollection *collection in smartAlbums) {
+                // 有可能是PHCollectionList类的的对象，过滤掉
+                if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
+                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+                model = [self modelWithResult:fetchResult name:collection.localizedTitle];
+                if (completion) completion(model);
+                break;
+            }
+        }
+
     } else {
         [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
             if ([group numberOfAssets] < 1) return;

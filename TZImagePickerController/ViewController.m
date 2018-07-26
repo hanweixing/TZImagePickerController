@@ -390,19 +390,6 @@
     if (buttonIndex == 1) { // 去设置界面，开启相机访问权限
         if (iOS8Later) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-        } else {
-            NSURL *privacyUrl;
-            if (alertView.tag == 1) {
-                privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=PHOTOS"];
-            } else {
-                privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=CAMERA"];
-            }
-            if ([[UIApplication sharedApplication] canOpenURL:privacyUrl]) {
-                [[UIApplication sharedApplication] openURL:privacyUrl];
-            } else {
-                UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"抱歉" message:@"无法跳转到隐私设置页面，请手动前往设置页面，谢谢" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                [alert show];
-            }
         }
     }
 }

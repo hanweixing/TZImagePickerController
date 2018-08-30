@@ -14,6 +14,12 @@
 #import "TZImageManager.h"
 #import "TZImageCropManager.h"
 
+@implementation TZCollectionViewFlowLayout
+- (BOOL)flipsHorizontallyInOppositeLayoutDirection {
+    return YES;
+}
+@end
+
 @interface TZPhotoPreviewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIScrollViewDelegate> {
     UICollectionView *_collectionView;
     NSArray *_photosTemp;
@@ -163,7 +169,7 @@
 }
 
 - (void)configCollectionView {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionViewFlowLayout *layout = [[TZCollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.itemSize = CGSizeMake(self.view.tz_width + 20, self.view.tz_height);
     layout.minimumInteritemSpacing = 0;

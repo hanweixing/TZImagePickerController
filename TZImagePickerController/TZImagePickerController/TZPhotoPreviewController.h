@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@interface TZCollectionViewFlowLayout : UICollectionViewFlowLayout
+@end
+
 @interface TZPhotoPreviewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *models;                  ///< All photo models / 所有图片模型数组

@@ -42,12 +42,14 @@
 
 @property (nonatomic, assign) double progress;
 @property (strong, nonatomic) id alertView;
+@property (nonatomic, assign) BOOL isRightToLeft;
 @end
 
 @implementation TZPhotoPreviewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.isRightToLeft = [[UIApplication sharedApplication] userInterfaceLayoutDirection] == UIUserInterfaceLayoutDirectionRightToLeft;
     [TZImageManager manager].shouldFixOrientation = YES;
     __weak typeof(self) weakSelf = self;
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)weakSelf.navigationController;
@@ -72,7 +74,8 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (iOS7Later) [UIApplication sharedApplication].statusBarHidden = YES;
-    if (_currentIndex) [_collectionView setContentOffset:CGPointMake((self.view.tz_width + 20) * _currentIndex, 0) animated:NO];
+    CGFloat offsetX = (self.view.tz_width + 20) * (self.isRightToLeft ? (self.models.count - 1 - _currentIndex) : _currentIndex);
+    if (_currentIndex) [_collectionView setContentOffset:CGPointMake(offsetX, 0) animated:NO];
     [self refreshNaviBarAndBottomBarState];
 }
 
@@ -343,7 +346,11 @@
     NSInteger currentIndex = offSetWidth / (self.view.tz_width + 20);
     
     if (currentIndex < _models.count && _currentIndex != currentIndex) {
-        _currentIndex = currentIndex;
+        if (self.isRightToLeft) {
+            _currentIndex = self.models.count - 1 - currentIndex;
+        } else {
+            _currentIndex = currentIndex;
+        }
         [self refreshNaviBarAndBottomBarState];
     }
 }
